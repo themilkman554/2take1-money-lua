@@ -1,5 +1,5 @@
 ---@diagnostic disable: undefined-global, lowercase-global, undefined-field
-local natives <const> = require("lib.natives2845")
+
 local gtascriptver = 1.68
 local scriptver = 2.8
 do 
@@ -7,16 +7,19 @@ do
         menu.notify("TURN ON TRUSTED LOCAL/GLOBAL AND NATIVES TO USE SCRIPT", "", 5, 0xFF00FFFF)
         return menu.exit()
     end
-	online_v = tonumber(natives.NETWORK.GET_ONLINE_VERSION())
-	if online_v ~= gtascriptver then
-	menu.notify("Outdated Lua, please download the new version on Discord. Game Version is " .. online_v .. " Script Version is for 1.68", "", 5, 0xFF00FFFF)
-	return menu.exit()
-	end
     if not utils.file_exists(utils.get_appdata_path("PopstarDevs", "2Take1Menu") .. "\\scripts\\".."lib\\natives2845.lua") then -- check if natives is installed
         menu.notify("Download the natives from scripts > install scripts > natives2845 to use this script", "",  5, 0xFF00FFFF)
         return menu.exit()
     end
 end
+local natives <const> = require("lib.natives2845")
+do
+	online_v = tonumber(natives.NETWORK.GET_ONLINE_VERSION())
+	if online_v ~= gtascriptver then
+	menu.notify("Outdated Lua, please download the new version on Discord. Game Version is " .. online_v .. " Script Version is for 1.68", "", 5, 0xFF00FFFF)
+	return menu.exit()
+	end
+	end
 
 local menuRoot <const> = menu.add_feature("OP Money Loop " .. scriptver, "parent", 0).id	
 local transactions <const> = menu.add_feature("Limited Transactions", "parent", menuRoot).id	
