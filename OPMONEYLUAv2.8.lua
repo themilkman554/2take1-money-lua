@@ -1,7 +1,7 @@
 ---@diagnostic disable: undefined-global, lowercase-global, undefined-field
 
 local gtascriptver = 1.68
-local scriptver = 2.8
+local scriptver = 2.9
 do 
     if not menu.is_trusted_mode_enabled(eTrustedFlags.LUA_TRUST_SCRIPT_VARS) and not menu.is_trusted_mode_enabled(eTrustedFlags.LUA_TRUST_NATIVES) then
         menu.notify("TURN ON TRUSTED LOCAL/GLOBAL AND NATIVES TO USE SCRIPT", "", 5, 0xFF00FFFF)
@@ -20,7 +20,7 @@ do
 	return menu.exit()
 	end
 	end
-
+	
 local menuRoot <const> = menu.add_feature("OP Money Loop " .. scriptver, "parent", 0).id	
 local transactions <const> = menu.add_feature("Limited Transactions", "parent", menuRoot).id	
 local loopSettings <const> = menu.add_feature("Loop Settings", "parent", menuRoot).id	
@@ -189,9 +189,13 @@ menu.add_feature("40m Loop #FF00EEEE#[SLOW]", "toggle", menuRoot, function(feat)
 
     while feat.on do
     trigger_transaction(joaat("SERVICE_EARN_BEND_JOB"), 15000000)
+	system.yield(300)
 	trigger_transaction(joaat("SERVICE_EARN_GANGOPS_AWARD_MASTERMIND_3"), 7000000)
+	system.yield(300)
 	trigger_transaction(joaat("SERVICE_EARN_JOB_BONUS"), 15000000)
+	system.yield(300)
 	trigger_transaction(joaat("SERVICE_EARN_DAILY_OBJECTIVE_EVENT"), 1000000)
+	system.yield(300)
 	trigger_transaction(joaat("SERVICE_EARN_FROM_BUSINESS_HUB_SELL"), 2000000)
         system.yield(20000)
     end
@@ -236,6 +240,41 @@ menu.add_feature("Fake Money Loop", "toggle", menuRoot, function(feat)
     end
 end)
 
+menu.add_feature("Block Transactions Errors", "toggle", menuRoot, function(feat)
+    while feat.on do 
+	set_global_i(4537356, 0)
+	system.yield(0)
+    end
+end)
+
+local moneremove <const> = menu.add_feature("Money Remover #FF0000FF#[WARNING!!!]", "parent", menuRoot).id	
+menu.add_feature("Remove all Bank and Wallet Money #FF0000FF#[WARNING!!!]", "action", moneremove, function(feat)
+    local waitBank = true
+    
+    while waitBank do
+        local bank = natives.MONEY.NETWORK_GET_VC_BANK_BALANCE(playerCharacter)
+        
+        if bank > 0 then
+            natives.NETSHOPPING.NET_GAMESERVER_TRANSFER_BANK_TO_WALLET(playerCharacter, bank)
+            system.wait()
+        else
+            waitBank = false
+        end
+    end
+    
+    local waitWallet = true
+    
+    while waitWallet do
+        local currentMoney = natives.MONEY.NETWORK_GET_VC_WALLET_BALANCE(playerCharacter)
+        
+        if currentMoney > 0 then
+            trigger_transaction(joaat("SERVICE_SPEND_CASH_SHARED"), currentMoney)
+            system.yield(0)
+        else
+            waitWallet = false
+        end
+    end
+end)
 local Options = {
     {name = "15m JOB_BONUS", hash = joaat("SERVICE_EARN_JOB_BONUS"), amount = 15000000},
     {name = "15m BEND_JOB", hash = joaat("SERVICE_EARN_BEND_JOB"), amount = 15000000},
@@ -379,7 +418,8 @@ local Options = {
     {name = "50k AMBIENT_JOB_PASS_PARCEL", hash = joaat("SERVICE_EARN_AMBIENT_JOB_PASS_PARCEL"), amount = 50000},
     {name = "50k TUNER_CAR_CLUB_MEMBERSHIP", hash = joaat("SERVICE_EARN_TUNER_CAR_CLUB_MEMBERSHIP"), amount = 50000},
     {name = "50k CASINO_AWARD_MISSION_TWO_FIRST_TIME", hash = joaat("SERVICE_EARN_CASINO_AWARD_MISSION_TWO_FIRST_TIME"), amount = 50000},
-    {name = "50k AMBIENT_JOB_HOT_TARGET_KILL", hash = joaat("SERVICE_EARN_AMBIENT_JOB_HOT_TARGET_KILL"), amount = 50000}
+    {name = "50k AMBIENT_JOB_HOT_TARGET_KILL", hash = joaat("SERVICE_EARN_AMBIENT_JOB_HOT_TARGET_KILL"), amount = 50000},
+	    {name = "50k AMBIENT_JOB_HOT_TARGET_KILL", hash = joaat("SERVICE_SPEND_PAY_BOSS"), amount = 21474836}
 }
 
 for i, v in ipairs(Options) do
@@ -387,4 +427,3 @@ for i, v in ipairs(Options) do
         trigger_transaction(v.hash, v.amount)
     end)
 end
-
