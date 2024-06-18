@@ -1,7 +1,7 @@
 ---@diagnostic disable: undefined-global, lowercase-global, undefined-field
 
 local gtascriptver = 1.68
-local scriptver = 2.9
+local scriptver = 3
 do 
     if not menu.is_trusted_mode_enabled(eTrustedFlags.LUA_TRUST_SCRIPT_VARS) and not menu.is_trusted_mode_enabled(eTrustedFlags.LUA_TRUST_NATIVES) then
         menu.notify("TURN ON TRUSTED LOCAL/GLOBAL AND NATIVES TO USE SCRIPT", "", 5, 0xFF00FFFF)
@@ -161,7 +161,7 @@ displayEarnedPerHour = menu.add_feature("Display Earned Per Hour", "toggle", loo
 displayEarnedPerMin = menu.add_feature("Display Earned Per Minute", "toggle", loopSettings)
 displayEarnedPerSec = menu.add_feature("Display Earned Per Second", "toggle", loopSettings)
 
-menu.add_feature("1 Million Loop #FF00EE00#[BEST]", "toggle", menuRoot, function(feat)
+menu.add_feature("180K Loop #FF0000FF#[RISKY]", "toggle", menuRoot, function(feat)
     if feat.on then
         startTimer()
     end
@@ -174,7 +174,7 @@ menu.add_feature("1 Million Loop #FF00EE00#[BEST]", "toggle", menuRoot, function
             until wait == false
         end
 
-        trigger_transaction(0x615762F1, 1000000)
+        trigger_transaction(0x615762F1, 180000)
         system.wait()
     end
 
