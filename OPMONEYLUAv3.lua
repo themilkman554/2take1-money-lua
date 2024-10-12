@@ -1,3 +1,11 @@
+--[[
+	abuazizv for the orginal rebound lua
+    ayim for transaction hash finder and 'better code'
+	decuwu for the money counter
+	gamecrunch 
+	big smoke
+--]]
+
 ---@diagnostic disable: undefined-global, lowercase-global, undefined-field
 
 local gtascriptver = 1.68
@@ -25,7 +33,7 @@ local menuRoot <const> = menu.add_feature("OP Money Loop " .. scriptver, "parent
 local transactions <const> = menu.add_feature("Limited Transactions", "parent", menuRoot).id	
 local loopSettings <const> = menu.add_feature("Loop Settings", "parent", menuRoot).id	
 local set_global_i <const> = script.set_global_i	
-local recovery <const> = 4537212
+local recovery <const> = 4537311
 local playerCharacter <const> = stats.stat_get_int(gameplay.get_hash_key("mpply_last_mp_char"), 0)	
 
 local currentMoney = natives.MONEY.NETWORK_GET_VC_WALLET_BALANCE(playerCharacter)
